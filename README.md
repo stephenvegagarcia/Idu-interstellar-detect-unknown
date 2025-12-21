@@ -91,6 +91,11 @@ This project combines multiple astronomical visualization scripts into a single 
 1. **Start the Flask application**
    ```bash
    python app.py
+   # or
+   python run.py
+   
+   # For development with debug mode (NOT for production):
+   python run.py --debug
    ```
 
 2. **Access the web interface**

@@ -136,10 +136,14 @@ Modify `static/css/style.css` to change colors, layout, etc.
 
 ## Development vs Production
 
-### Development (Current)
+### Development
 ```python
-app.run(debug=True, host='0.0.0.0', port=5000)
+# Enable debug mode with --debug flag
+python run.py --debug
+# or
+python app.py --debug
 ```
+⚠️ **Warning**: Debug mode allows arbitrary code execution through the debugger. Never use in production!
 
 ### Production (Recommended)
 Use a WSGI server like Gunicorn:

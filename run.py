@@ -17,6 +17,8 @@ def check_dependencies():
     return True
 
 def main():
+    import sys
+    
     print("=" * 60)
     print("IDU - Interstellar Detect Unknown")
     print("=" * 60)
@@ -24,13 +26,18 @@ def main():
     if not check_dependencies():
         sys.exit(1)
     
+    # Check if debug mode is requested
+    debug_mode = '--debug' in sys.argv
+    
     print("\nStarting Flask application...")
     print("Access the application at: http://localhost:5000")
+    if debug_mode:
+        print("⚠️  Running in DEBUG mode - not for production use!")
     print("Press CTRL+C to stop the server\n")
     
     # Import and run the Flask app
     from app import app
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=debug_mode, host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':
     main()

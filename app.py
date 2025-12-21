@@ -120,7 +120,10 @@ def cleanup_processes():
         stop_visualization(viz_id)
 
 if __name__ == '__main__':
+    import sys
+    # Only enable debug mode if explicitly requested
+    debug_mode = '--debug' in sys.argv
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        app.run(debug=debug_mode, host='0.0.0.0', port=5000)
     finally:
         cleanup_processes()
