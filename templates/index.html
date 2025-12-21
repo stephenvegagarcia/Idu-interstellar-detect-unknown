@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Interstellar Detection{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Astronomical Visualization Suite</h2>
+    <p>Explore the cosmos through advanced visualizations and simulations</p>
+</div>
+
+<div class="visualizations-grid">
+    {% for viz_id, viz_info in visualizations.items() %}
+    <div class="viz-card">
+        <div class="viz-card-header">
+            <h3>{{ viz_info.name }}</h3>
+        </div>
+        <div class="viz-card-body">
+            <p>File: <code>{{ viz_info.file }}</code></p>
+        </div>
+        <div class="viz-card-footer">
+            <a href="{{ url_for('view_visualization', viz_id=viz_id) }}" class="btn btn-primary">
+                Launch Visualization
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

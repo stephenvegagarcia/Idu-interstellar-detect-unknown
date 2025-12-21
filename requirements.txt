@@ -1,0 +1,13 @@
+Flask==3.0.0
+Werkzeug==3.0.1
+pygame==2.5.2
+numpy==1.24.3
+pandas==2.0.3
+opencv-python==4.8.1.78
+skyfield==1.46
+plyer==2.1.0
+qutip==4.7.3
+scipy==1.11.4
+scikit-image==0.21.0
+astropy==5.3.4
+requests==2.31.0
