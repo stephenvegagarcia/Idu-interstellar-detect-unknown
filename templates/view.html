@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}{{ viz_name }} - Interstellar Detection{% endblock %}
+
+{% block content %}
+<div class="view-header">
+    <h2>{{ viz_name }}</h2>
+    <div class="controls">
+        <button id="runBtn" class="btn btn-success">Run Visualization</button>
+        <button id="stopBtn" class="btn btn-danger" disabled>Stop Visualization</button>
+        <button id="viewCodeBtn" class="btn btn-secondary">View Code</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+
+<div class="status-panel" id="statusPanel">
+    <div class="status-indicator" id="statusIndicator">
+        <span class="status-dot"></span>
+        <span id="statusText">Ready</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Instructions</h3>
+    <ul>
+        <li>Click "Run Visualization" to start the application</li>
+        <li>The visualization will open in a new window (Pygame/OpenCV)</li>
+        <li>Click "Stop Visualization" to close the application</li>
+        <li>Click "View Code" to see the source code</li>
+    </ul>
+    <div class="warning">
+        <strong>Note:</strong> This visualization runs as a desktop application. 
+        Make sure you have all required dependencies installed.
+    </div>
+</div>
+
+<div id="codeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Source Code: {{ viz_name }}</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <pre><code id="sourceCode" class="python">Loading...</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const vizId = '{{ viz_id }}';
+const runBtn = document.getElementById('runBtn');
+const stopBtn = document.getElementById('stopBtn');
+const viewCodeBtn = document.getElementById('viewCodeBtn');
+const statusIndicator = document.getElementById('statusIndicator');
+const statusText = document.getElementById('statusText');
+const codeModal = document.getElementById('codeModal');
+const closeModal = document.querySelector('.close');
+
+// Update status
+function updateStatus() {
+    fetch(`/api/status/${vizId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.running) {
+                statusText.textContent = 'Running';
+                statusIndicator.classList.add('running');
+                statusIndicator.classList.remove('stopped');
+                runBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                statusText.textContent = 'Stopped';
+                statusIndicator.classList.add('stopped');
+                statusIndicator.classList.remove('running');
+                runBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching status:', error);
+            statusText.textContent = 'Error';
+        });
+}
+
+// Run visualization
+runBtn.addEventListener('click', () => {
+    fetch(`/api/run/${vizId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'started') {
+                alert(data.message);
+                updateStatus();
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error starting visualization:', error);
+            alert('Failed to start visualization. Please try again.');
+        });
+});
+
+// Stop visualization
+stopBtn.addEventListener('click', () => {
+    fetch(`/api/stop/${vizId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'stopped') {
+                alert(data.message);
+                updateStatus();
+            }
+        })
+        .catch(error => {
+            console.error('Error stopping visualization:', error);
+            alert('Failed to stop visualization. Please try again.');
+        });
+});
+
+// View code
+viewCodeBtn.addEventListener('click', () => {
+    fetch(`/api/code/${vizId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.code) {
+                document.getElementById('sourceCode').textContent = data.code;
+                codeModal.style.display = 'block';
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading code:', error);
+            alert('Failed to load source code. Please try again.');
+        });
+});
+
+// Close modal
+closeModal.addEventListener('click', () => {
+    codeModal.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === codeModal) {
+        codeModal.style.display = 'none';
+    }
+});
+
+// Update status every 2 seconds
+updateStatus();
+setInterval(updateStatus, 2000);
+</script>
+{% endblock %}
