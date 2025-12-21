@@ -2,12 +2,9 @@
 Flask Web Application for Interstellar Detection Visualizations
 This app provides web interface to run various astronomical visualization scripts
 """
-from flask import Flask, render_template, Response, request, jsonify
+from flask import Flask, render_template, jsonify
 import subprocess
 import os
-import signal
-import threading
-import time
 
 app = Flask(__name__)
 

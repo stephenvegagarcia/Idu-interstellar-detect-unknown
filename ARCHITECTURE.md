@@ -124,7 +124,7 @@ Modify `static/css/style.css` to change colors, layout, etc.
 
 ### Flask App Dependencies:
 - Flask 3.0.0
-- Werkzeug 3.1.0
+- Werkzeug 3.0.1
 
 ### Visualization Dependencies:
 - Pygame (graphics)
